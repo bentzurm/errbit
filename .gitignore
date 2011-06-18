@@ -8,3 +8,8 @@ config/mongoid.yml
 .rvmrc
 *~
 *.rbc
+vendor/ruby
+vendor/ruby
+vendor/cache
+/.idea/*
+.rake_t_cache
