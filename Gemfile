@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.9'
+gem 'rails', '3.0.5'
 gem 'nokogiri'
 gem 'mongoid', '2.0.0.rc.8'
 gem 'haml'
@@ -30,7 +30,7 @@ end
 
 group :production do
   #gem "therubyracer", :require => 'v8'
-  gem "therubyracer", "~> 0.9.1.beta1"
+  #gem "therubyracer", "~> 0.9.1.beta1"
 end
 
 group :test do
