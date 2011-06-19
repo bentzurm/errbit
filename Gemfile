@@ -18,6 +18,7 @@ gem 'uglifier'
 gem 'jquery-rails'
 gem 'remotipart'
 gem 'execjs'
+gem 'therubyracer'
 
 platform :ruby do
   gem 'bson_ext', '~> 1.2'
@@ -26,11 +27,6 @@ end
 group :development, :test do
   gem 'rspec-rails', '~> 2.5'
   gem 'webmock', :require => false
-end
-
-group :production do
-  #gem "therubyracer", :require => 'v8'
-  #gem "therubyracer", "~> 0.9.1.beta1"
 end
 
 group :test do
