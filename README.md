@@ -1,6 +1,6 @@
 Errbit: The open source self-hosted error catcher
 =================================================
-
+Shuky Dvir
 Errbit is an open source, self-hosted error catcher. It is [Hoptoad](http://hoptoadapp.com)
 API compliant so you can just point the Hoptoad notifier at your Errbit server if you are
 already using Hoptoad.
