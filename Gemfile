@@ -29,7 +29,8 @@ group :development, :test do
 end
 
 group :production do
-  gem "therubyracer", :require => 'v8'
+  #gem "therubyracer", :require => 'v8'
+  gem "therubyracer", "~> 0.9.1.beta1"
 end
 
 group :test do

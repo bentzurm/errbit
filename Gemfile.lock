@@ -185,7 +185,7 @@ DEPENDENCIES
   rspec (~> 2.5)
   rspec-rails (~> 2.5)
   sass
-  therubyracer
+  therubyracer (~> 0.9.1.beta1)
   uglifier
   useragent (~> 0.3.1)
   webmock
