@@ -27,6 +27,10 @@ group :development, :test do
   gem 'webmock', :require => false
 end
 
+group :production do
+  gem 'therubyracer'
+end
+
 group :test do
   gem 'rspec', '~> 2.5'
   gem 'database_cleaner', '~> 0.6.0'

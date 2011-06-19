@@ -15,3 +15,4 @@ vendor/cache
 /.idea/*
 .rake_t_cache
 vendor/ruby
+vendor/ruby
