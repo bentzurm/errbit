@@ -16,3 +16,5 @@ vendor/cache
 .rake_t_cache
 vendor/ruby
 vendor/ruby
+vendor/ruby
+vendor/ruby
