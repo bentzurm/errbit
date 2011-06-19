@@ -1,3 +1,4 @@
+.DS_Store
 .bundle
 db/*.sqlite3
 log/*.log
@@ -13,3 +14,4 @@ vendor/ruby
 vendor/cache
 /.idea/*
 .rake_t_cache
+vendor/ruby
