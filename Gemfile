@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.5'
+gem 'rails', '3.0.9'
 gem 'nokogiri'
 gem 'mongoid', '2.0.0.rc.8'
 gem 'haml'
