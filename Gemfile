@@ -17,8 +17,6 @@ gem 'coffee-script'
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'remotipart'
-gem 'execjs'
-gem 'therubyracer'
 
 platform :ruby do
   gem 'bson_ext', '~> 1.2'
