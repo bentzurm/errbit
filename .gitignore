@@ -13,3 +13,4 @@ vendor/ruby
 vendor/cache
 /.idea/*
 .rake_t_cache
+.DS_Store
