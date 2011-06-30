@@ -1,2 +1,7 @@
-%h1 Settings#index
-%p Find me in app/views/settings/index.html.haml
+- content_for :title, 'Settings'
+
+= form_for @user do |f|
+  
+  = render 'fields', :f => f
+    
+  %div.buttons= f.submit 'Submit'
