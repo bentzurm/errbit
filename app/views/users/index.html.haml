@@ -5,12 +5,14 @@
 %table
   %thead
     %tr
+      %td Gravatar
       %th Name
       %th.main Email
       %th Admin?
   %tbody
     - @users.each do |user|
       %tr
+        %td= gravatar_tag user, :size => 50, :rating => :x, :html => { :class => "gravatar" }
         %td.nowrap= link_to user.name, user_path(user)
         %td= user.email
         %td= user.admin? ? 'Y' : 'N'

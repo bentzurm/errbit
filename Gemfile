@@ -11,6 +11,7 @@ gem 'redmine_client', :git => "git://github.com/oruen/redmine_client.git"
 gem 'mongoid_rails_migrations'
 gem 'useragent', '~> 0.3.1'
 gem 'pivotal-tracker'
+gem 'gravatarify', '~> 3.0.0'
 
 platform :ruby do
   gem 'bson_ext', '~> 1.2'
@@ -19,6 +20,7 @@ end
 group :development, :test do
   gem 'rspec-rails', '~> 2.5'
   gem 'webmock', :require => false
+  gem 'capistrano'
 end
 
 group :test do
