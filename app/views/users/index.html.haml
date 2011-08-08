@@ -15,6 +15,6 @@
         %td= gravatar_tag user, :size => 50, :secure => true, :rating => :pg, :html => { :class => "gravatar" }
         %td.nowrap= link_to user.name, user_path(user)
         %td= user.email
-        %td= user.admin? ? 'Y' : 'N'
+        %td= user.admin? ? 'Yes' : 'No'
 = will_paginate @users, :previous_label => '&laquo; Previous', :next_label => 'Next &raquo;'
       
