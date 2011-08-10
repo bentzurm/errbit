@@ -12,7 +12,7 @@
   %tbody
     - @users.each do |user|
       %tr
-        %td= gravatar_tag user, :size => 50, :secure => true, :rating => :pg, :html => { :class => "gravatar" }
+        %td= link_to gravatar_tag(user, :size => 50, :secure => true, :rating => :pg, :html => { :class => "gravatar" }), user_path(user)
         %td.nowrap= link_to user.name, user_path(user)
         %td= user.email
         %td= user.admin? ? 'Yes' : 'No'
