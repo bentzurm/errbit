@@ -1,3 +1,4 @@
+- any_issue_links = errs.any?{|e| e.issue_link.present? }
 %table.errs
   %thead
     %tr
@@ -6,22 +7,38 @@
       %th Latest
       %th Deploy
       %th Count
+      - if any_issue_links
+        %th Issue
       %th Resolve
   %tbody
     - errs.each do |err|
       %tr{:class => err.resolved? ? 'resolved' : 'unresolved'}
         %td.app
           = link_to err.app.name, app_path(err.app)
-          %span.environment= err.environment
+          - if current_page?(:controller => 'errs')
+            %span.environment= link_to err.environment, errs_path(:environment => err.environment)
+          - else
+            %span.environment= link_to err.environment, app_path(err.app, :environment => err.environment)
         %td.message
-          = link_to err.message, app_err_path(err.app, err)
+          = link_to truncate(err.message, :length => 230), app_err_path(err.app, err)
           %em= err.where
+          - if err.comments.any?
+            - comment = err.comments.last
+            %br
+            .inline_comment
+              %em.commenter= (Errbit::Config.user_has_username ? comment.user.username : comment.user.email).to_s << ":"
+              %em= truncate(comment.body, :length => 100, :separator => ' ')
         %td.latest #{time_ago_in_words(last_notice_at err)} ago
         %td.deploy= err.app.last_deploy_at ? err.app.last_deploy_at.to_s(:micro) : 'n/a'
         %td.count= link_to err.notices_count, app_err_path(err.app, err)
-        %td.resolve= link_to image_tag("thumbs-up.png"), resolve_app_err_path(err.app, err), :title => "Resolve", :method => :put, :class => 'resolve' if err.unresolved?
+        - if any_issue_links
+          %td.issue_link
+            - if err.issue_link.present?
+              = link_to image_tag("#{err.app.issue_tracker.class::Label}_goto.png"), err.issue_link, :target => "_blank"
+        %td.resolve= link_to image_tag("thumbs-up.png"), resolve_app_err_path(err.app, err), :title => "Resolve", :method => :put, :confirm => err_confirm, :class => 'resolve' if err.unresolved?
     - if errs.none?
       %tr
-        %td{:colspan => (@app ? 5 : 6)}
+        %td{:colspan => 6}
           %em No errs here
 = will_paginate @errs, :previous_label => '&laquo; Previous', :next_label => 'Next &raquo;'
+

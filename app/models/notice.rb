@@ -11,7 +11,7 @@ class Notice
   field :request, :type => Hash
   field :notifier, :type => Hash
 
-  referenced_in :err
+  belongs_to :err
   index :err_id
 
   after_create :cache_last_notice_at
@@ -23,6 +23,7 @@ class Notice
   validates_presence_of :backtrace, :server_environment, :notifier
 
   scope :ordered, order_by(:created_at.asc)
+  index :created_at
 
   def self.from_xml(hoptoad_xml)
     hoptoad_notice = Hoptoad::V2.parse_xml(hoptoad_xml)
@@ -44,7 +45,7 @@ class Notice
 
     err.notices.create!({
       :message            => hoptoad_notice['error']['message'],
-      :backtrace          => hoptoad_notice['error']['backtrace']['line'],
+      :backtrace          => [hoptoad_notice['error']['backtrace']['line']].flatten,
       :server_environment => hoptoad_notice['server-environment'],
       :request            => hoptoad_notice['request'],
       :notifier           => hoptoad_notice['notifier']
@@ -55,7 +56,11 @@ class Notice
     agent_string = env_vars['HTTP_USER_AGENT']
     agent_string.blank? ? nil : UserAgent.parse(agent_string)
   end
-  
+
+  def self.in_app_backtrace_line?(line)
+    !!(line['file'] =~ %r{^\[PROJECT_ROOT\]/(?!(vendor))})
+  end
+
   def request
     read_attribute(:request) || {}
   end
@@ -80,10 +85,15 @@ class Notice
     err.update_attributes(:last_notice_at => created_at)
   end
 
+  # Backtrace containing only files from the app itself (ignore gems)
+  def app_backtrace
+    backtrace.select { |l| l && l['file'] && l['file'].include?("[PROJECT_ROOT]") }
+  end
+
   protected
 
   def should_notify?
-    err.app.notify_on_errs? && Errbit::Config.email_at_notices.include?(err.notices.count) && err.app.watchers.any?
+    err.app.notify_on_errs? && (Errbit::Config.per_app_email_at_notices && err.app.email_at_notices || Errbit::Config.email_at_notices).include?(err.notices.count) && err.app.watchers.any?
   end
 
 
@@ -103,6 +113,8 @@ class Notice
     [:server_environment, :request, :notifier].each do |h|
       send("#{h}=",sanitize_hash(send(h)))
     end
+    # Set unknown backtrace files
+    backtrace.each{|line| line['file'] = "[unknown source]" if line['file'].blank? }
   end
 
   def sanitize_hash(h)

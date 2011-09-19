@@ -5,13 +5,12 @@ class ErrsController < ApplicationController
 
   def index
     app_scope = current_user.admin? ? App.all : current_user.apps
+    @errs = Err.for_apps(app_scope).in_env(params[:environment]).unresolved.ordered
     respond_to do |format|
       format.html do
-        @errs = Err.for_apps(app_scope).unresolved.ordered.paginate(:page => params[:page], :per_page => current_user.per_page)
+        @errs = @errs.paginate(:page => params[:page], :per_page => current_user.per_page)
       end
-      format.atom do
-        @errs = Err.for_apps(app_scope).unresolved.ordered
-      end
+      format.atom
     end
   end
 
@@ -25,6 +24,7 @@ class ErrsController < ApplicationController
     page      = 1 if page.to_i.zero?
     @notices  = @err.notices.ordered.paginate(:page => page, :per_page => 1)
     @notice   = @notices.first
+    @comment = Comment.new
   end
 
   def create_issue
@@ -33,7 +33,7 @@ class ErrsController < ApplicationController
     if @app.issue_tracker
       @app.issue_tracker.create_issue @err
     else
-      flash[:error] = "This up has no issue tracker setup."
+      flash[:error] = "This app has no issue tracker setup."
     end
     redirect_to app_err_path(@app, @err)
   rescue ActiveResource::ConnectionError => e
@@ -42,7 +42,7 @@ class ErrsController < ApplicationController
     redirect_to app_err_path(@app, @err)
   end
 
-  def clear_issue
+  def unlink_issue
     @err.update_attribute :issue_link, nil
     redirect_to app_err_path(@app, @err)
   end
@@ -59,6 +59,30 @@ class ErrsController < ApplicationController
   rescue ActionController::RedirectBackError
     redirect_to app_path(@app)
   end
+
+
+  def create_comment
+    @comment = Comment.new(params[:comment].merge(:user_id => current_user.id))
+    if @comment.valid?
+      @err.comments << @comment
+      @err.save
+      flash[:success] = "Comment saved!"
+    else
+      flash[:error] = "I'm sorry, your comment was blank! Try again?"
+    end
+    redirect_to app_err_path(@app, @err)
+  end
+
+  def destroy_comment
+    @comment = Comment.find(params[:comment_id])
+    if @comment.destroy
+      flash[:success] = "Comment deleted!"
+    else
+      flash[:error] = "Sorry, I couldn't delete your comment for some reason. I hope you don't have any sensitive information in there!"
+    end
+    redirect_to app_err_path(@app, @err)
+  end
+
 
   protected
 
@@ -81,3 +105,4 @@ class ErrsController < ApplicationController
     end
 
 end
+

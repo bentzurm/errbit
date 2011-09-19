@@ -4,19 +4,30 @@
   = f.label :name
   = f.text_field :name
 
-%div.checkbox
-  = f.check_box :notify_on_errs
-  = f.label :notify_on_errs, 'Notify on errors'
+%div
+  = f.label :github_url
+  = f.text_field :github_url
+
+%fieldset
+  %legend Notifications
+  %div.checkbox
+    = f.check_box :notify_on_errs, 'data-show-when-checked' => '.email_at_notices_nested'
+    = f.label :notify_on_errs, 'Notify on errors'
+  - if Errbit::Config.per_app_email_at_notices
+    %div.email_at_notices_nested{:style => f.object.notify_on_errs ? '' : 'display: none;'}
+      .field-helpertext Send a notification every
+      = f.text_field :email_at_notices, :value => f.object.email_at_notices.join(", ")
+      .field-helpertext times an error occurs (comma separated).
+  %div.checkbox
+    = f.check_box :notify_on_deploys
+    = f.label :notify_on_deploys, 'Notify on deploys'
 
 %div.checkbox
-  = f.check_box :resolve_errs_on_deploy
-  = f.label :resolve_errs_on_deploy, 'Resolve errs on deploy'
+  = f.check_box :notify_all_users, 'data-hide-when-checked' => '.watchers.nested-wrapper'
+  = f.label :notify_all_users, 'Send notifications to all users'
 
-%div.checkbox
-  = f.check_box :notify_on_deploys
-  = f.label :notify_on_deploys, 'Notify on deploys'
 
-%fieldset.nested-wrapper
+%fieldset.watchers.nested-wrapper{:style => f.object.notify_all_users ? 'display: none;' : ''}
   %legend Watchers
   = f.fields_for :watchers do |w|
     %div.watcher.nested
@@ -25,38 +36,14 @@
         = label_tag :watcher_type_user, 'User', :for => label_for_attr(w, 'watcher_type_user')
         = w.radio_button :watcher_type, :email
         = label_tag :watcher_type_email, 'Email Address', :for => label_for_attr(w, 'watcher_type_email')
-      %div.user{:class => w.object.email.blank? ? 'choosen' : nil}
+      %div.watcher_params.user{:class => w.object.email.blank? ? 'chosen' : nil}
         = w.select :user_id, User.all.map{|u| [u.name,u.id.to_s]}, :include_blank => '-- Select a User --'
-      %div.email{:class => w.object.email.present? ? 'choosen' : nil}
+      %div.watcher_params.email{:class => w.object.email.present? ? 'chosen' : nil}
         = w.text_field :email
 
-%fieldset
-  %legend Issue tracker
-  = f.fields_for :issue_tracker do |w|
-    %div.issue_tracker.nested
-      %div.choose
-        = w.radio_button :issue_tracker_type, :lighthouseapp
-        = label_tag :issue_tracker_type_lighthouseapp, 'Lighthouse', :for => label_for_attr(w, 'issue_tracker_type_lighthouseapp')
-        = w.radio_button :issue_tracker_type, :redmine
-        = label_tag :issue_tracker_type_redmine, 'Redmine', :for => label_for_attr(w, 'issue_tracker_type_redmine')
-        = w.radio_button :issue_tracker_type, :pivotal
-        = label_tag :issue_tracker_type_pivotal, 'Pivotal Tracker', :for => label_for_attr(w, 'issue_tracker_type_pivotal')
-      %div.tracker_params.lighthouseapp{:class => lighthouse_tracker?(w.object) ? 'chosen' : nil}
-        = w.label :account, "Account"
-        = w.text_field :account, :placeholder => "abc from abc.lighthouseapp.com"
-        = w.label :api_token, "API token"
-        = w.text_field :api_token, :placeholder => "API Token for your account"
-        = w.label :project_id, "Project ID"
-        = w.text_field :project_id, :placeholder => "123 from abc from abc.lighthouseapp.com/projects/123"
-      %div.tracker_params.redmine{:class => redmine_tracker?(w.object) ? 'chosen' : nil}
-        = w.label :account, "Redmine URL"
-        = w.text_field :account, :placeholder => "like http://www.redmine.org/"
-        = w.label :api_token, "API token"
-        = w.text_field :api_token, :placeholder => "API Token for your account"
-        = w.label :project_id, "Project ID"
-        = w.text_field :project_id
-      %div.tracker_params.pivotal{:class => pivotal_tracker?(w.object) ? 'chosen' : nil}
-        = w.label :project_id, "Project ID"
-        = w.text_field :project_id
-        = w.label :api_token, "API token"
-        = w.text_field :api_token, :placeholder => "API Token for your account"
+%div.checkbox
+  = f.check_box :resolve_errs_on_deploy
+  = f.label :resolve_errs_on_deploy, 'Resolve errs on deploy'
+
+= render "issue_tracker_fields", :f => f
+

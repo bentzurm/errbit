@@ -1,11 +1,18 @@
 $(function(){
   activateNestedForms();
+  activateCheckboxHooks();
 
   if($('div.watcher.nested').length)
-    activateWatcherTypeSelector();
+    activateTypeSelector('watcher');
 
   if($('div.issue_tracker.nested').length)
-    activateIssueTrackerTypeSelector();
+    activateTypeSelector('issue_tracker', 'tracker_params');
+
+  $('body').addClass('has-js');
+  $('.label_radio').click(function(){
+    activateLabelIcons();
+  });
+  activateLabelIcons();
 });
 
 function activateNestedForms() {
@@ -63,20 +70,48 @@ function removeNestedItem() {
   nestedItem.hide();
 }
 
-function activateWatcherTypeSelector() {
-  $('div.watcher input[name*=watcher_type]').live('click', function(){
-    var choosen = $(this).val();
+
+function activateTypeSelector(field_class, section_class) {
+  var section_class = section_class || field_class+"_params";   // section_class can be deduced if not given
+  // disable all inactive tabs to avoid sending its values on server
+  $('div.'+field_class+' > div.'+section_class).not('.chosen').find('input')
+    .attr('disabled','disabled').val('');
+
+  $('div.'+field_class+' input[name*=type]').live('click', function(){
+    // Look for section in 'data-section', and fall back to 'value'
+    var chosen = $(this).data("section") || $(this).val();
     var wrapper = $(this).closest('.nested');
-    wrapper.find('div.choosen').removeClass('choosen');
-    wrapper.find('div.'+choosen).addClass('choosen');
+    wrapper.find('div.chosen.'+section_class).removeClass('chosen').find('input').attr('disabled','disabled');
+    wrapper.find('div.'+section_class+'.'+chosen).addClass('chosen').find('input').removeAttr('disabled');
   });
 }
 
-function activateIssueTrackerTypeSelector() {
-  $('div.issue_tracker input[name*=issue_tracker_type]').live('click', function(){
-    var chosen = $(this).val();
-    var wrapper = $(this).closest('.nested');
-    wrapper.find('div.chosen').removeClass('chosen');
-    wrapper.find('div.'+chosen).addClass('chosen');
+
+function activateCheckboxHooks() {
+  // Hooks to hide/show content when a checkbox is clicked
+  $('input[type="checkbox"][data-hide-when-checked]').each(function(){
+    $(this).change(function(){
+      el = $($(this).data('hide-when-checked'));
+      $(this).attr('checked') ? el.hide() : el.show();
+    });
+  });
+  $('input[type="checkbox"][data-show-when-checked]').each(function(){
+    $(this).change(function(){
+      el = $($(this).data('show-when-checked'));
+      $(this).attr('checked') ? el.show() : el.hide();
+    });
   });
 }
+
+
+function activateLabelIcons() {
+  if ($('.label_radio input').length) {
+    $('.label_radio').each(function(){
+      $(this).removeClass('r_on');
+    });
+    $('.label_radio input:checked').each(function(){
+      $(this).parent('label').addClass('r_on');
+    });
+  };
+};
+

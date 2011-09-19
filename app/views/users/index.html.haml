@@ -7,6 +7,8 @@
     %tr
       %th Avatar
       %th Name
+      - if Errbit::Config.user_has_username
+        %th Username
       %th.main Email
       %th Admin?
   %tbody
@@ -14,7 +16,9 @@
       %tr
         %td= link_to gravatar_tag(user, :size => 50, :secure => true, :rating => :pg, :html => { :class => "gravatar" }), user_path(user)
         %td.nowrap= link_to user.name, user_path(user)
+        - if Errbit::Config.user_has_username
+          %td= user.username
         %td= user.email
         %td= user.admin? ? 'Yes' : 'No'
 = will_paginate @users, :previous_label => '&laquo; Previous', :next_label => 'Next &raquo;'
-      
+

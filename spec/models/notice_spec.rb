@@ -22,6 +22,35 @@ describe Notice do
     end
   end
 
+  context '.in_app_backtrace_line?' do
+    let(:backtrace) do [{
+        'number'  => rand(999),
+        'file'    => '[GEM_ROOT]/gems/actionpack-3.0.4/lib/action_controller/metal/rescue.rb',
+        'method'  => ActiveSupport.methods.shuffle.first
+      }, {
+        'number'  => rand(999),
+        'file'    => '[PROJECT_ROOT]/vendor/plugins/seamless_database_pool/lib/seamless_database_pool/controller_filter.rb',
+        'method'  => ActiveSupport.methods.shuffle.first
+      }, {
+        'number'  => rand(999),
+        'file'    => '[PROJECT_ROOT]/lib/set_headers.rb',
+        'method'  => ActiveSupport.methods.shuffle.first
+      }]
+    end
+
+    it "should be false for line not starting with PROJECT_ROOT" do
+      Notice.in_app_backtrace_line?(backtrace[0]).should == false
+    end
+
+    it "should be false for file in vendor dir" do
+      Notice.in_app_backtrace_line?(backtrace[1]).should == false
+    end
+
+    it "should be true for application file" do
+      Notice.in_app_backtrace_line?(backtrace[2]).should == true
+    end
+  end
+
   context '#from_xml' do
     before do
       @xml = Rails.root.join('spec','fixtures','hoptoad_test_notice.xml').read
@@ -103,6 +132,11 @@ describe Notice do
       @xml = Rails.root.join('spec','fixtures','hoptoad_test_notice_without_request_section.xml').read
       lambda { Notice.from_xml(@xml) }.should_not raise_error
     end
+
+    it "should raise ApiVersionError" do
+      @xml = Rails.root.join('spec', 'fixtures', 'hoptoad_test_notice_with_wrong_version.xml').read
+      expect { Notice.from_xml(@xml)  }.to raise_error(Hoptoad::V2::ApiVersionError)
+    end
   end
 
   describe "key sanitization" do
@@ -125,20 +159,27 @@ describe Notice do
       notice.user_agent.browser.should == 'Chrome'
       notice.user_agent.version.to_s.should =~ /^10\.0/
     end
-    
+
     it "should be nil if HTTP_USER_AGENT is blank" do
       notice = Factory.build(:notice)
       notice.user_agent.should == nil
     end
   end
-  
-  describe "email notifications" do
+
+  describe "email notifications (configured individually for each app)" do
+    custom_thresholds = [2, 4, 8, 16, 32, 64]
+
     before do
-      @app = Factory(:app_with_watcher)
+      Errbit::Config.per_app_email_at_notices = true
+      @app = Factory(:app_with_watcher, :email_at_notices => custom_thresholds)
       @err = Factory(:err, :app => @app)
     end
 
-    Errbit::Config.email_at_notices.each do |threshold|
+    after do
+      Errbit::Config.per_app_email_at_notices = false
+    end
+
+    custom_thresholds.each do |threshold|
       it "sends an email notification after #{threshold} notice(s)" do
         @err.notices.stub(:count).and_return(threshold)
         Mailer.should_receive(:err_notification).
@@ -149,3 +190,4 @@ describe Notice do
   end
 
 end
+
