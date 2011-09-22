@@ -191,7 +191,7 @@ Issue Trackers
 **Github Issues Integration**
 
 * For 'Account/Repository', the account will either be a username or organization. i.e. **errbit/errbit**
-* On [https://github.com](https://github.com), click "Account Settings", and then "Account Admin" to find your **API Token**.
+* If you are logged in on [Github](https://github.com), you can find your **API Token** on this page: [https://github.com/account/admin](https://github.com/account/admin).
 * You will also need to provide the username that your API Token is connected to.
 
 
@@ -213,17 +213,18 @@ or you can set up the Github Issues tracker for your **Self.Errbit** app:
 
   4. Fill in the **Username** field with your github username.
 
-  5. On [https://github.com](https://github.com), click "Account Settings", and then "Account Admin" to find your Github **API Token**.
+  5. If you are logged in on [Github](https://github.com), you can find your **API Token** on this page: [https://github.com/account/admin](https://github.com/account/admin).
 
   6. Save the settings by clicking **Update App** (or **Add App**)
 
-  7. You will now be able to easily post a bug report to Github Issues.
+  7. You can now easily post bug reports to Github Issues by clicking the **Create Issue** button on a **Self.Errbit** error.
 
 
 TODO
 ----
 
 * Add ability for watchers to be configured for types of notifications they should receive
+
 
 Special Thanks
 --------------
@@ -233,16 +234,28 @@ Special Thanks
 * [Relevance](http://thinkrelevance.com) - For giving me Open-source Fridays to work on Errbit and all my awesome co-workers for giving feedback and inspiration.
 * [Thoughtbot](http://thoughtbot.com) - For being great open-source advocates and setting the bar with [Airbrake](http://airbrakeapp.com).
 
+
 Contributing
 ------------
 
+We welcome any contributions. If you need to tweak Errbit for your organization's needs,
+there are probably other users who will appreciate your work.
+Please try to determine whether or not your feature should be **global** or **optional**,
+and make **optional** features configurable via `config/config.yml`. 
+
+**Examples of optional features:**
+
+* Enable / disable user comments on errors.
+* Adding a `username` field to the User model.
+
+**How to contribute:**
+
 * Fork the project.
 * Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with Rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+* Add tests for it. This is important so we don't break it in a future version unintentionally.
+* Commit, do not mess with Rakefile, version, or history. (if you want to have your own version, that is fine but bump version in a commit by itself we can ignore when we pull)
+* Send us a pull request. Bonus points for topic branches.
+
 
 Copyright
 ---------
