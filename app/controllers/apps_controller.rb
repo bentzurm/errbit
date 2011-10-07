@@ -1,5 +1,4 @@
 class AppsController < InheritedResources::Base
-
   before_filter :require_admin!, :except => [:index, :show]
   before_filter :parse_email_at_notices_or_set_default, :only => [:create, :update]
   respond_to :html
@@ -9,14 +8,20 @@ class AppsController < InheritedResources::Base
       format.html do
         @all_errs = !!params[:all_errs]
 
-        @errs = resource.errs
-        @errs = @errs.unresolved unless @all_errs
-        @errs = @errs.in_env(params[:environment]).ordered.paginate(:page => params[:page], :per_page => current_user.per_page)
+        @sort = params[:sort]
+        @order = params[:order]
+        @sort = "app" unless %w{message last_notice_at last_deploy_at count}.member?(@sort)
+        @order = "asc" unless (@order == "desc")
 
+        @problems = resource.problems
+        @problems = @problems.unresolved unless @all_errs
+        @problems = @problems.in_env(params[:environment]).ordered_by(@sort, @order).paginate(:page => params[:page], :per_page => current_user.per_page)
+
+        @selected_problems = params[:problems] || []
         @deploys = @app.deploys.order_by(:created_at.desc).limit(5)
       end
       format.atom do
-        @errs = resource.errs.unresolved.ordered
+        @problems = resource.problems.unresolved.ordered
       end
     end
   end
@@ -49,7 +54,7 @@ class AppsController < InheritedResources::Base
       # Caches the unresolved err counts while performing the sort.
       @unresolved_counts = {}
       @apps ||= end_of_association_chain.all.sort{|a,b|
-        [a,b].each{|app| @unresolved_counts[app.id] ||= app.errs.unresolved.count }
+        [a,b].each{|app| @unresolved_counts[app.id] ||= app.problems.unresolved.count }
         @unresolved_counts[b.id] <=> @unresolved_counts[a.id]
       }
     end

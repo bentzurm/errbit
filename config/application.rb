@@ -21,7 +21,7 @@ module Errbit
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
-    config.autoload_paths += [Rails.root.join("app/models/issue_trackers")]
+    config.autoload_paths += [Rails.root.join("app/models/issue_trackers"), Rails.root.join('lib')]
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -39,7 +39,7 @@ module Errbit
     # config.i18n.default_locale = :de
 
     # JavaScript files you want as :defaults (application.js is always included).
-    config.action_view.javascript_expansions[:defaults] = %w(jquery rails form)
+    config.action_view.javascript_expansions[:defaults] = %w(jquery underscore-1.1.6 rails form)
 
     # > rails generate - config
     config.generators do |g|

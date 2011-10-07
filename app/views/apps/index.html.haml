@@ -7,7 +7,7 @@
     %tr
       %th Name
       %th Last Deploy
-      %th Errs
+      %th Errors
   %tbody
     - @apps.each do |app|
       %tr
@@ -19,8 +19,8 @@
           - else
             n/a
         %td.count
-          - if app.errs.count > 0
-            - unresolved = @unresolved_counts[app.id]
+          - if app.problems.count > 0
+            - unresolved = @unresolved_counts[app.id] || app.problems.unresolved.count
             = link_to unresolved, app_path(app), :class => (unresolved == 0 ? "resolved" : nil)
           - else
             \-
