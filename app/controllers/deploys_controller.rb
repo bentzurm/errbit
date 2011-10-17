@@ -16,11 +16,13 @@ class DeploysController < ApplicationController
     app = App.find(params[:app_id])
     raise Mongoid::Errors::DocumentNotFound.new(App, app.id) unless current_user.admin? || current_user.watching?(app)
 
-    @deploys = app.deploys.order_by(:created_at.desc).paginate(:page => params[:page], :per_page => 10)
+    @deploys = app.deploys.order_by(:created_at.desc).
+      paginate(:page => params[:page], :per_page => 10)
+    @app = app
   end
-  
+
   private
-  
+
     def default_deploy
       if params[:deploy]
         {
@@ -32,7 +34,7 @@ class DeploysController < ApplicationController
         }
       end
     end
-  
+
     # handle Heroku's HTTP post deployhook format
     def heroku_deploy
       {
@@ -42,5 +44,6 @@ class DeploysController < ApplicationController
         :revision     => params[:head],
       }
     end
-    
+
 end
+
