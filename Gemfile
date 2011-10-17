@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.0.10'
 gem 'nokogiri'
-gem 'mongoid', '2.1.2'
+gem 'mongoid', '2.1.4'
 gem 'haml'
 gem 'will_paginate', '>=3'
 gem 'htmlentities', "~> 4.3.0"
@@ -18,6 +18,7 @@ gem 'inherited_resources'
 gem 'SystemTimer', :platform => :ruby_18
 gem 'hoptoad_notifier', "~> 2.4"
 gem 'actionmailer_inline_css', "~> 1.3.0"
+gem 'gravatarify', '~> 3.0.0'
 
 platform :ruby do
   gem 'bson_ext', '~> 1.4.0'
@@ -29,7 +30,6 @@ group :development, :test do
   gem 'rspec-rails', '~> 2.6'
   gem 'webmock', :require => false
   gem 'factory_girl', '~> 1.3.3'
-  gem 'factory_girl_rails', '~> 1.0.1'
   gem 'capistrano'
   gem 'factory_girl_rails'
   unless ENV['TRAVIS']
