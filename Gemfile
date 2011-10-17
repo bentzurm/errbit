@@ -19,6 +19,7 @@ gem 'SystemTimer', :platform => :ruby_18
 gem 'hoptoad_notifier', "~> 2.4"
 gem 'actionmailer_inline_css', "~> 1.3.0"
 gem 'gravatarify', '~> 3.0.0'
+gem 'capistrano'
 
 platform :ruby do
   gem 'bson_ext', '~> 1.4.0'
