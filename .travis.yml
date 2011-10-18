@@ -6,6 +6,7 @@ rvm:
 branches:
   only:
     - master
+    - develop
 
 # To stop Travis from running tests for a new commit,
 # add the following to your commit message: [ci skip]
