@@ -4,7 +4,6 @@ gem 'rails', '3.0.10'
 gem 'nokogiri'
 gem 'mongoid', '2.1.4'
 gem 'haml'
-gem 'will_paginate', '>=3'
 gem 'htmlentities', "~> 4.3.0"
 gem 'devise', '~> 1.4.0'
 gem 'lighthouse-api'
@@ -18,11 +17,14 @@ gem 'inherited_resources'
 gem 'SystemTimer', :platform => :ruby_18
 gem 'hoptoad_notifier', "~> 2.4"
 gem 'actionmailer_inline_css', "~> 1.3.0"
+gem 'kaminari'
 gem 'gravatarify', '~> 3.0.0'
 gem 'capistrano'
 
 platform :ruby do
-  gem 'bson_ext', '~> 1.4.0'
+  gem 'mongo', '= 1.3.1'
+  gem 'bson', '= 1.3.1'
+  gem 'bson_ext', '= 1.3.1'
 end
 
 gem 'ri_cal'
@@ -36,6 +38,7 @@ group :development, :test do
     gem 'ruby-debug', :platform => :mri_18
     gem 'ruby-debug19', :platform => :mri_19, :require => 'ruby-debug'
   end
+  # gem 'rpm_contrib', :git => "git://github.com/bensymonds/rpm_contrib.git", :branch => "mongo-1.4.0_update"
 end
 
 group :test do
@@ -45,6 +48,6 @@ group :test do
 end
 
 group :heroku do
-  gem 'thin'
+  gem 'unicorn'
 end
 
