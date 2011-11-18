@@ -22,9 +22,9 @@ gem 'gravatarify', '~> 3.0.0'
 gem 'capistrano'
 
 platform :ruby do
-  gem 'mongo', '= 1.3.1'
-  gem 'bson', '= 1.3.1'
-  gem 'bson_ext', '= 1.3.1'
+  gem 'mongo', '= 1.4.1'
+  gem 'bson', '= 1.4.1'
+  gem 'bson_ext', '= 1.4.1'
 end
 
 gem 'ri_cal'
