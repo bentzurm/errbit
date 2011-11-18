@@ -19,6 +19,6 @@
         - if Errbit::Config.user_has_username
           %td= user.username
         %td= user.email
-        %td= user.admin? ? 'Yes' : 'No'
-= will_paginate @users, :previous_label => '&laquo; Previous', :next_label => 'Next &raquo;'
+        %td= user.admin? ? 'Y' : 'N'
+= paginate @users
 
