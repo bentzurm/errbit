@@ -21,6 +21,7 @@ gem 'actionmailer_inline_css', "~> 1.3.0"
 gem 'kaminari'
 gem 'gravatarify', '~> 3.0.0'
 gem 'capistrano'
+gem 'rack-ssl-enforcer'
 
 platform :ruby do
   gem 'mongo', '= 1.4.1'
