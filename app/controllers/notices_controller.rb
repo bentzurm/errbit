@@ -26,7 +26,9 @@ class NoticesController < ApplicationController
         member_id = err.notices.last.request['session']['member_id']
         post_params = {
           "action" => "create",
+          "case[name]" => err.problem.message,
           "case[redmine_id]" => redmine_id,
+          "case[description]" => err.problem.message,
           "case[issue][account_id]" => account_id,
           "case[issue][user_id]" => member_id
         }
