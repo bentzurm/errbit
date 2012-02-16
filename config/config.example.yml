@@ -11,6 +11,9 @@
 # The host of your errbit server
 host: errbit.example.com
 
+# Enforce SSL connections
+enforce_ssl: false
+
 # The email address which email notifications
 # will be sent from.
 email_from: errbit@example.com
@@ -35,6 +38,16 @@ user_has_username: false
 # This is useful if the err is not critical enough to create a ticket,
 # but you want to leave a short comment.
 allow_comments_with_issue_tracker: true
+
+# Setup your deploy options
+deployment:
+  hosts:
+    web: errbit.example.com
+    app: errbit.example.com
+    db: errbit.example.com
+  repository: http://github.com/errbit/errbit.git
+  user: deploy
+  deploy_to: /var/www/apps/errbit
 
 # Configure SMTP settings. If you are running Errbit on Heroku,
 # sendgrid will be configured by default.

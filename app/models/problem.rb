@@ -2,14 +2,6 @@
 # reported as various Errs, but the user has grouped the
 # Errs together as belonging to the same problem.
 
-## Add methode nan? in Time because needed by #max(:created_at)
-#
-# Fix on  Mongoid > 2.3.x with commit :
-# https://github.com/mongoid/mongoid/commit/5481556e24480f0a1783f85d6b5b343b0cef7192
-class Time
-  def nan?; false ;end
-end
-
 class Problem
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -122,7 +114,7 @@ class Problem
     if app
       self.app_name = app.name
       self.last_deploy_at = if (last_deploy = app.deploys.where(:environment => self.environment).last)
-        last_deploy.created_at
+        last_deploy.created_at.utc
       end
       collection.update({'_id' => self.id},
                         {'$set' => {'app_name' => self.app_name,
@@ -132,7 +124,7 @@ class Problem
 
   def cache_notice_attributes(notice=nil)
     notice ||= notices.first
-    attrs = {:last_notice_at => notices.max(:created_at)}
+    attrs = {:last_notice_at => notices.order_by([:created_at, :asc]).last.try(:created_at)}
     attrs.merge!(
       :message => notice.message,
       :environment => notice.environment_name,
@@ -166,7 +158,7 @@ class Problem
 
     def attribute_count_descrease(name, value)
       counter, index = send(name), attribute_index(value)
-      if counter[index]['count'] > 1
+      if counter[index] && counter[index]['count'] > 1
         counter[index]['count'] -= 1
       else
         counter.delete(index)

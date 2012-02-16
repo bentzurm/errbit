@@ -13,7 +13,7 @@ gem 'mongoid_rails_migrations'
 gem 'useragent', '~> 0.3.1'
 gem 'pivotal-tracker'
 gem 'ruby-fogbugz', :require => 'fogbugz'
-gem 'octokit'
+gem 'octokit', '0.6.4'
 gem 'inherited_resources'
 gem 'SystemTimer', :platform => :ruby_18
 gem 'hoptoad_notifier', "~> 2.4"
@@ -21,6 +21,7 @@ gem 'actionmailer_inline_css', "~> 1.3.0"
 gem 'kaminari'
 gem 'gravatarify', '~> 3.0.0'
 gem 'capistrano'
+gem 'rack-ssl-enforcer'
 
 platform :ruby do
   gem 'mongo', '= 1.4.1'
