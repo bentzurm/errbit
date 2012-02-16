@@ -25,7 +25,7 @@ class IssueTrackers::RedmineTracker < IssueTracker
     end
   end
 
-  def create_issue(problem)
+  def create_issue(problem, custom = nil)
     token = api_token
     acc = account
     RedmineClient::Base.configure do
@@ -37,6 +37,7 @@ class IssueTrackers::RedmineTracker < IssueTracker
     issue.description = body_template.result(binding)
     issue.save!
     problem.update_attribute :issue_link, "#{RedmineClient::Issue.site.to_s.sub(/#{RedmineClient::Issue.site.path}$/, '')}#{RedmineClient::Issue.element_path(issue.id, :project_id => project_id)}".sub(/\.xml\?project_id=#{project_id}$/, "\?project_id=#{project_id}")
+    issue if custom
   end
 
   def url_to_file(file_path, line_number = nil)
