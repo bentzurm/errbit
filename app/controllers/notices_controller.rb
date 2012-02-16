@@ -31,7 +31,11 @@ class NoticesController < ApplicationController
           "case[issue][user_id]" => member_id
         }
       end
-      x = Net::HTTP.post_form(URI.parse(Errbit::Config.admin_url + '/subscription_admin/cases/create'), post_params)
+      url = URI.parse(Errbit::Config.admin_url)
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = (url.scheme == 'https')
+      http.post('/subscription_admin/cases/create', post_params.to_param)
+      # x = Net::HTTP.post_form(URI.parse(Errbit::Config.admin_url + '/subscription_admin/cases/create'), post_params)
     end
     respond_with @notice
   end
